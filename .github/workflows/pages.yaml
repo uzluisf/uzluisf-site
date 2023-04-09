@@ -1,0 +1,49 @@
+# Workflow to build and deploy site to Github Pages using Hugo
+
+name: Github Pages
+
+# Trigger workflow or pull request events on the branch `main`.
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  # Run the following job when `Github Pages` worfklow is triggered.
+  deploy:
+    # Set up the runner the job will run on.
+    runs-on: ubuntu-latest
+
+    # The following steps are part of this job:
+    steps:
+
+    # Step 1 - Check out the repository under $GITHUB_WORKSPACE
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+          # Fetch Hugo themes under submodules.
+          submodules: true
+          # Fetch all history for .GitInfo and .Lastmod
+          fetch-depth: 0
+
+    # Step 2 - Set up the latest version of Hugo
+    - name: Set up Hugo
+      uses: peaceiris/actions-hugo@v2
+      with:
+          hugo-version: 'latest'
+
+    # Step 3 - Clean `public` directory as used by Hugo
+    - name: Clean public directory
+      run: rm -rf public
+
+    # Step 4 - Build the site using the latest version of Hugo using the provided theme.
+    - name: Build site
+      run: hugo --theme=hugo-dpdpb
+
+    # Step 6 - Push the generated site from this repository (i.e, source) to
+    # the listed external repository's `main` branch (i.e., target).
+    - name: Deploy site
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          external_repository: uzluisf/uzluisf.github.io
+          publish_branch: main

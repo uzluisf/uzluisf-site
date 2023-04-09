@@ -1,0 +1,3 @@
+[submodule "themes/hugo-dpdpb"]
+	path = themes/hugo-dpdpb
+	url = git@github.com:uzluisf/hugo-dpdpb.git
